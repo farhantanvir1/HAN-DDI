@@ -68,7 +68,6 @@ def main(args):
     node_features = {'drug': drug_feats, 'protein': protein_feats, 'chem_Struct': chem_Struct_feats, 'side_effect': side_effect_feats}
     #node_features = g.ndata['hv']
     n_features = drug_feats.shape[1]
-    k = 13
     model = Model(#graph=g,
                     #features=features,  
                     meta_paths=[['dp', 'pd'], ['dp','pp', 'pd'], ['ds', 'sd'] , ['dcs', 'csd']],
@@ -80,7 +79,7 @@ def main(args):
     #model = Model(n_features, 16, 2, g.etypes)
     opt = torch.optim.Adam(model.parameters())
     for epoch in range(11):
-        negative_graph = construct_negative_graph(g, k, ('drug', 'ddi', 'drug'))
+        negative_graph = construct_negative_graph(g, 12, ('drug', 'ddi', 'drug'))
         pos_score, neg_score = model(g, negative_graph, 'drug', drug_feats, ('drug', 'ddi', 'drug'))
         loss = compute_loss(pos_score, neg_score)
         opt.zero_grad()
